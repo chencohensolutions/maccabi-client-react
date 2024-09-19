@@ -1,0 +1,34 @@
+html {
+  height: 100vh;
+}
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Open Sans', sans-serif;
+  // font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+  //   'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  #root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    #page-wrapper {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
