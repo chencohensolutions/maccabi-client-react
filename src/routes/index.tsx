@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 
-import { PageLogin, PageHome } from '../pages';
-
+import { PageLogin, PageHome, PageUsers, PageRooms, PageRoom } from '../pages';
 
 export const Navigator = () => (
 	<Routes>
 		<Route path="/login" element={<PageLogin />} />
+		<Route path="/users" element={<PageUsers />} />
+		<Route path="/rooms" element={<PageRooms />} />
+		<Route path="/rooms/:roomId" element={<PageRoom />} />
 		<Route path="/" element={<PageHome />} />
-
-		{/* <Route path="*" element={<p>Page Not Founde: 404!</p>} /> */}
 	</Routes>)

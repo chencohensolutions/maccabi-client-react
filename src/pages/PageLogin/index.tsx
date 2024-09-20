@@ -1,16 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import styles from './login.module.scss';
 import { TextField, Button } from '@mui/material';
-import { loginPassword, useDispatch } from "../../store";
+import { ELoginState, loginPassword, useDispatch, useSelector } from "../../store";
+import { useNavigate } from "react-router-dom";
 
 export const PageLogin = () => {
     const dispatch = useDispatch();
     const [userName, setUserName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const navigate = useNavigate();
+
+    const loginState = useSelector(state => (state.loginState))
+
+    useEffect(() => {
+        if (loginState === ELoginState.success) {
+            navigate('/', { replace: true });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loginState]);
+    
     const onLoginSubmitClick = () => {
         dispatch(loginPassword({ userName, password }))
     };
+    
     return (
         <div id="page-login" className={styles.container}>
             <div className={styles.loginTitle}>

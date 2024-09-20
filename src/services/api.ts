@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../config';
 
-const {baseURL} = config;
+const { baseURL } = config;
 
 console.log(baseURL);
 const axiosConfig = {
@@ -12,33 +12,37 @@ const axiosConfig = {
 const axiosInstance = axios.create(axiosConfig);
 axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
 
-enum UserRole {
-  CLIENT = 'client',
-  ADMIN = 'admin',
+// enum UserRole {
+//   CLIENT = 'client',
+//   ADMIN = 'admin',
+// }
+
+export interface IUser {
+  id: string;
+  userName: string;
+  password: string;
 }
 
 export interface ILoginResponse {
   id: string;
-  email: string;
   userName: string;
-  role: UserRole;
   error: number;
 }
 
 
 const api = {
   loginToken: async (): Promise<ILoginResponse | undefined> => {
-    const token = localStorage.getItem('access_token');
+    const token = sessionStorage.getItem('access_token');
     if (token) {
       try {
-        const res = await axiosInstance.post('/loginToken', {token});
+        const res = await axiosInstance.post('/loginToken', { token });
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         return res.data;
       } catch (error: any) {
         switch (error.error.code) {
           case 2:
             axiosInstance.defaults.headers.common['Authorization'] = '';
-            localStorage.removeItem('access_token');
+            sessionStorage.removeItem('access_token');
             throw new Error('token expired');
         }
       }
@@ -48,17 +52,17 @@ const api = {
   },
   loginPassword: async (userName: string, password: string): Promise<ILoginResponse | undefined> => {
     try {
-      const res = await axiosInstance.post('/loginPassword', {userName, password});
+      const res = await axiosInstance.post('/loginPassword', { userName, password });
       if (res && res.data) {
         const token = res.data.token;
         if (res.data.token) {
-          localStorage.setItem('access_token', token);
+          sessionStorage.setItem('access_token', token);
           axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
         return res.data;
       }
     } catch (err) {
-      localStorage.removeItem('access_token');
+      sessionStorage.removeItem('access_token');
       throw err;
     }
   },
@@ -66,6 +70,22 @@ const api = {
     axiosInstance.defaults.headers.common['Authorization'] = '';
     localStorage.removeItem('access_token');
   },
+  getUsers: async () => {
+    const res = await axiosInstance.get('/users');
+    return res.data;
+  },
+  deleteUser: async (userId: string) => {
+    const res = await axiosInstance.delete('/users/' + userId);
+    return res.data;
+  },
+  createUser: async (userName: string, password: string) => {
+    const res = await axiosInstance.post('/users', { userName, password });
+    return res.data;
+  },
+  updateUser: async (userName: string, newUserName: string) => {
+    const res = await axiosInstance.patch('/users', { userName, newUserName });
+    return res.data;
+  }
 };
 
 export default api;

@@ -13,6 +13,8 @@ interface IUserState {
   loginState: ELoginState;
   isLoggedin: boolean;
   tokenExpired: boolean;
+  userId: string | null;
+  userName: string | null;
 }
 
 export const logout = createAction('session/logout', () => {
@@ -40,7 +42,10 @@ const userReducer = createReducer(
     loginState: ELoginState.idle,
     tokenExpired: false,
     isLoggedin: false,
+    userId: null,
+    userName: null,
   } as IUserState,
+  
   builder => {
     builder
       .addCase(loginToken.pending, state => {
@@ -51,6 +56,8 @@ const userReducer = createReducer(
         state.loginState = ELoginState.success;
         state.tokenExpired = false;
         state.isLoggedin = true;
+        state.userName = action.payload?.userName || null;
+        state.userId = action.payload?.id || null;
       })
       .addCase(loginToken.rejected, state => {
         state.loginState = ELoginState.idle;
@@ -61,6 +68,8 @@ const userReducer = createReducer(
         state.loginState = ELoginState.success;
         state.tokenExpired = false;
         state.isLoggedin = true;
+        state.userId = action.payload?.id || null;
+        state.userName = action.payload?.userName || null;
       })
       .addCase(loginPassword.pending, state => {
         state.loginState = ELoginState.pending;
@@ -68,11 +77,14 @@ const userReducer = createReducer(
       .addCase(loginPassword.rejected, state => {
         state.loginState = ELoginState.error;
         state.isLoggedin = false;
+        state.userId = null;
       })
       .addCase(logout, state => {
         state.loginState = ELoginState.idle;
         state.tokenExpired = true;
         state.isLoggedin = false;
+        state.userId = null;
+        state.userName = null;
       });
   },
 );

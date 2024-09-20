@@ -1,17 +1,13 @@
 import { useEffect } from 'react';
 import './App.css';
 import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
-import { Provider,  } from 'react-redux';
-import { reduxStore,  useSelector, useDispatch } from './store';
+import { Provider, } from 'react-redux';
+import { reduxStore, useSelector, useDispatch } from './store';
 import { Navigator } from './routes';
 import { loginToken } from './store/session';
 
-
-
-
-
 const App = () => {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const tokenExpired = useSelector((state) => state.tokenExpired)
@@ -26,7 +22,7 @@ const App = () => {
 	useEffect(() => {
 		dispatch(loginToken())
 	});
-  
+
 	return (
 		<div id="page-wrapper" >
 			<Navigator />
