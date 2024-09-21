@@ -1,5 +1,5 @@
 import { createAction, createReducer, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../services/api';
+import api, { IUserAssoc } from '../services/api';
 
 
 export enum ELoginState {
@@ -9,12 +9,14 @@ export enum ELoginState {
   error,
 }
 
+
 interface IUserState {
   loginState: ELoginState;
   isLoggedin: boolean;
   tokenExpired: boolean;
   userId: string | null;
   userName: string | null;
+  users: IUserAssoc | null;
 }
 
 export const logout = createAction('session/logout', () => {
@@ -44,6 +46,7 @@ const userReducer = createReducer(
     isLoggedin: false,
     userId: null,
     userName: null,
+    users: null,
   } as IUserState,
   
   builder => {
@@ -58,6 +61,7 @@ const userReducer = createReducer(
         state.isLoggedin = true;
         state.userName = action.payload?.userName || null;
         state.userId = action.payload?.id || null;
+        state.users = action.payload?.users || null;
       })
       .addCase(loginToken.rejected, state => {
         state.loginState = ELoginState.idle;
@@ -70,6 +74,7 @@ const userReducer = createReducer(
         state.isLoggedin = true;
         state.userId = action.payload?.id || null;
         state.userName = action.payload?.userName || null;
+        state.users = action.payload?.users || null;
       })
       .addCase(loginPassword.pending, state => {
         state.loginState = ELoginState.pending;

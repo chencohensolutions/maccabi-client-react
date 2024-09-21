@@ -26,9 +26,13 @@ export interface IUser {
 export interface ILoginResponse {
   id: string;
   userName: string;
+  users: IUserAssoc;
   error: number;
 }
 
+export interface IUserAssoc {
+  [id: string]: string;
+}
 
 const api = {
   loginToken: async (): Promise<ILoginResponse | undefined> => {
@@ -68,7 +72,7 @@ const api = {
   },
   logout: () => {
     axiosInstance.defaults.headers.common['Authorization'] = '';
-    localStorage.removeItem('access_token');
+    sessionStorage.removeItem('access_token');
   },
   getUsers: async () => {
     const res = await axiosInstance.get('/users');

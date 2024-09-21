@@ -1,33 +1,69 @@
-import { AppBar, Box, Button, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
+import { AppBar, Link, Box, Breadcrumbs, Button, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { logout, useDispatch, useSelector } from "../store";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import PeopleIcon from '@mui/icons-material/People';
 import ChatIcon from '@mui/icons-material/Chat';
+import { IRoom } from "../services/ChatRoomsClient";
 
-export const Header = () => {
+interface PropsHeader {
+    room?: IRoom;
+}
+
+interface IBreadcrumbsItem {
+    label: string;
+    link: string | null;
+}
+export const Header = ({ room }: PropsHeader) => {
     const location = useLocation();
     const userName = useSelector((state) => state.userName);
     const navigate = useNavigate();
 
-    const getPageTitle = () => {
-        if (location.pathname === '/') {
-            return 'Home';
-        } else if (location.pathname === '/users') {
-            return 'Users';
-        } else if (location.pathname === '/rooms') {
-            return 'Chat Rooms';
-        };
-    }
+    const breadcrumbsList = useMemo(() => {
+        const path = location.pathname.split('/');
 
-    const title = getPageTitle();
+
+        const list = [{
+            label: 'Home',
+            link: '/'
+        }] as IBreadcrumbsItem[];
+
+        if (room) {
+            list.push({
+                label: 'Rooms',
+                link: '/rooms'
+            });
+            list.push({
+                label: room.title,
+                link: null
+            });
+            return list;
+        }
+        if (path[1] && path[1] === 'users') {
+            list.push({
+                label: "Users",
+                link: null
+            });
+            return list
+        }
+
+        if (path[1] && path[1] === 'rooms') {
+            list.push({
+                label: "Rooms",
+                link: null
+            });
+            return list
+        }
+        return list;
+    }, [location.pathname, room]);
+
 
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
 
-    useEffect(() => { }, [location.pathname]);
+    // useEffect(() => { }, [location.pathname]);
 
     const onLogoutClick = () => {
         dispatch(logout())
@@ -37,7 +73,7 @@ export const Header = () => {
         setOpen(newOpen);
     };
 
-    return <AppBar position="static">
+    return <AppBar position="static" sx={{backgroundColor: "#515151", flex: "none"}}>
         <Toolbar>
             <IconButton
                 size="large"
@@ -48,9 +84,22 @@ export const Header = () => {
                 onClick={toggleDrawer(true)}>
                 <MenuIcon />
             </IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                {title}
-            </Typography>
+            <Breadcrumbs aria-label="breadcrumb" sx={{ flexGrow: 1, color: "white" }} >
+                {breadcrumbsList.map((item, index) => (
+                    (index === breadcrumbsList.length - 1) ?
+                        <Typography key={index} sx={{ color: 'white' }}>{item.label}</Typography>
+                        :
+                        <Link color="#DDDDDD" key={index} underline="hover"  onClick={() => {
+                            if (item.link) {
+                                navigate(item.link)
+                            }
+                        }}>
+                            {item.label}
+                        </Link>
+
+                ))}
+            </Breadcrumbs>
+
             <Box>{userName}</Box>
             <Button color="inherit" onClick={onLogoutClick}>Logout</Button>
         </Toolbar>

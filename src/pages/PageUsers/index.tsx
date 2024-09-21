@@ -35,8 +35,8 @@ const DialogCreateUser = ({ open, setOpen, onCreateUser }: PropsDialogCreateUser
                 Create User
             </DialogTitle>
             <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    <TextField type="text" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="User Name" />
+                <DialogContentText id="alert-dialog-description" sx={{ display: "flex", flexDirection: "column" }}>
+                    <TextField type="newUserName" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="User Name" />
                     <TextField type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
                 </DialogContentText>
             </DialogContent>
