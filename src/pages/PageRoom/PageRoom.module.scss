@@ -51,7 +51,11 @@
               .bubble {
                 align-items: flex-end;
                 background-color: rgb(255, 255, 128);
+                .info {
+                    align-self: flex-start;
+                  }
               }
+
               .avatar {
                 display: none;
               }
@@ -73,7 +77,7 @@
               .info {
                 display: flex;
                 flex-direction: row;
-                align-self: flex-start;
+                align-self: flex-end;
                 align-items: center;
                 .timestamp {
                   font-size: 0.7em;
