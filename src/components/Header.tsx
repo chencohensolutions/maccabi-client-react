@@ -24,7 +24,6 @@ export const Header = ({ room }: PropsHeader) => {
     const breadcrumbsList = useMemo(() => {
         const path = location.pathname.split('/');
 
-
         const list = [{
             label: 'Home',
             link: '/'
@@ -63,7 +62,6 @@ export const Header = ({ room }: PropsHeader) => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
 
-    // useEffect(() => { }, [location.pathname]);
 
     const onLogoutClick = () => {
         dispatch(logout())
@@ -99,9 +97,7 @@ export const Header = ({ room }: PropsHeader) => {
 
                 ))}
             </Breadcrumbs>
-
-            <Box>{userName}</Box>
-            <Button color="inherit" onClick={onLogoutClick}>Logout</Button>
+            <Button color="inherit" onClick={onLogoutClick}>Logout {userName}</Button>
         </Toolbar>
         <Drawer
             anchor={"left"}
