@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import styles from './login.module.scss';
-import { TextField, Button, Alert } from '@mui/material';
+import { TextField, Button, Alert, FormLabel, FormControl, FormGroup } from '@mui/material';
 import { ELoginState, loginPassword, useDispatch, useSelector } from "../../store";
 import { useNavigate } from "react-router-dom";
 
@@ -35,47 +35,42 @@ export const PageLogin = () => {
                 Sign In
             </div>
             <div className={styles.inputsContainer}>
-                <div className={styles.record}>
-                    <label htmlFor="name">
-                        User Name
-                    </label>
-                    <TextField
-                        id="name"
-                        type="text"
-                        className={styles.formInput}
-                        placeholder={'User Name'}
-                        name={'userName'}
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
-                    />
-                </div>
-                <div className={styles.record}>
-                    <label htmlFor="password">
-                        Password
-                    </label>
-                    <TextField
-                        id="password"
-                        type="password"
-                        className={styles.formInput}
-                        placeholder={'password'}
-                        name={'password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-
-                <div className={styles.record}>
+                <FormGroup sx={{ gap: '10px' }}>
+                    <FormControl>
+                        <FormLabel htmlFor="name">User Name</FormLabel>
+                        <TextField
+                            id="name"
+                            type="text"
+                            className={styles.formInput}
+                            name={'userName'}
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel htmlFor="password">Password</FormLabel>
+                        <TextField
+                            id="password"
+                            type="password"
+                            className={styles.formInput}
+                            name={'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </FormControl>
+                </FormGroup>
+                <FormControl>
                     <Button variant="contained" onClick={onLoginSubmitClick}>
                         Login
                     </Button>
-                </div>
-                <div className={styles.record}>
+                </FormControl>
+                <FormControl>
                     {error && (
                         <Alert severity="error">
                             {error}
                         </Alert>
                     )}
-                </div>
+                </FormControl>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
+import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormGroup, FormLabel, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Toolbar } from "@mui/material";
 import { Header } from "../../components/Header"
 import { useEffect, useState } from "react";
 import api, { IUser } from "../../services/api";
@@ -20,8 +20,8 @@ const DialogCreateUser = ({ open, setOpen, onCreateUser }: PropsDialogCreateUser
         setOpen(false);
     };
     const onSubmit = () => {
-        onCreateUser(userName, password);
         onCancel();
+        onCreateUser(userName, password);
     };
     return (
         <Dialog
@@ -34,10 +34,16 @@ const DialogCreateUser = ({ open, setOpen, onCreateUser }: PropsDialogCreateUser
                 Create User
             </DialogTitle>
             <DialogContent>
-                <DialogContentText id="alert-dialog-description" sx={{ display: "flex", flexDirection: "column" }}>
-                    <TextField type="newUserName" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="User Name" />
-                    <TextField type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-                </DialogContentText>
+                <FormGroup sx={{ gap: '10px' }}>
+                    <FormControl>
+                        <FormLabel htmlFor="newUserName">User Name</FormLabel>
+                        <TextField id="newUserName" type="newUserName" autoComplete="off" value={userName} onChange={(e) => setUserName(e.target.value)} />
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel htmlFor="newPassword">Password</FormLabel>
+                        <TextField id="newPassword" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </FormControl>
+                </FormGroup>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onSubmit}>Create</Button>
@@ -108,10 +114,10 @@ export const PageUsers = () => {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Header />
-            <DialogCreateUser open={dialogCreateUserOpen} onCreateUser={onCreateUser} setOpen={setDialogCreateUser} />
-            <DialogDeleteUser userName={dialogDeleteUserId} onDeleteUser={onDeleteUser} setUserName={setDialogDeleteUserId} />
             <Box sx={{ flexGrow: 1 }}>
-                <Button variant="contained" onClick={() => setDialogCreateUser(true)}>Create User</Button>
+                <Toolbar>
+                    <Button variant="contained" onClick={() => setDialogCreateUser(true)}>Create User</Button>
+                </Toolbar>
                 <List>
                     {users.map(({ id, userName }: IUser) => <ListItem key={id}
                         secondaryAction={
@@ -138,5 +144,7 @@ export const PageUsers = () => {
                     </ListItem>)}
                 </List>
             </Box>
+            <DialogCreateUser open={dialogCreateUserOpen} setOpen={setDialogCreateUser} onCreateUser={onCreateUser} />
+            <DialogDeleteUser userName={dialogDeleteUserId} setUserName={setDialogDeleteUserId} onDeleteUser={onDeleteUser} />
         </Box>)
 };

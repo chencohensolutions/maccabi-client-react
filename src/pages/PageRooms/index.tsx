@@ -1,54 +1,58 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, TextField } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormLabel, List, ListItem, TextField, Toolbar } from "@mui/material";
 import { Header } from "../../components/Header"
 import { ChatRoomsClient, IRoom } from "../../services/ChatRoomsClient";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 
 
 const chatRoomsClient = new ChatRoomsClient();
 
 interface PropsDialogCreateRoom {
-    open: boolean;
-    setOpen: (open: boolean) => void;
     onCreateRoom: (title: string) => void;
 }
 
-const DialogCreateRoom = ({ open, setOpen, onCreateRoom }: PropsDialogCreateRoom) => {
+const ButtonCreateRoom = ({ onCreateRoom }: PropsDialogCreateRoom) => {
     const [title, setTitle] = useState('');
+    const [open, setOpen] = useState(false);
     const onCancel = () => {
         setOpen(false);
         setTitle('');
     };
     const onSubmit = () => {
+        setOpen(false);
+        setTitle('');
         onCreateRoom(title);
-        onCancel();
     };
     return (
-        <Dialog
-            open={open}
-            onClose={onCancel}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle id="alert-dialog-title">
-                Create Room
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    <TextField type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Room Title" />
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onSubmit}>Create</Button>
-                <Button onClick={onCancel}>Cancel</Button>
-            </DialogActions>
-        </Dialog>
+        <>
+            <Button variant="contained" onClick={() => setOpen(true)}>Create Room</Button>
+            <Dialog
+                open={open}
+                onClose={onCancel}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Create Room
+                </DialogTitle>
+                <DialogContent>
+                    <FormControl>
+                        <FormLabel htmlFor="newUserName">Room Title</FormLabel>
+                        <TextField type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onSubmit}>Create</Button>
+                    <Button onClick={onCancel}>Cancel</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+
     )
 };
 
 export const PageRooms = () => {
     const [rooms, setRooms] = useState<IRoom[]>([]);
-    const [dialogCreateRoomOpen, setDialogCreateRoomOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -62,16 +66,15 @@ export const PageRooms = () => {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Header />
-            <Button variant="contained" onClick={() => setDialogCreateRoomOpen(true)}>Create Room</Button>
-
-            <DialogCreateRoom open={dialogCreateRoomOpen} onCreateRoom={onCreateRoom} setOpen={setDialogCreateRoomOpen} />
+            <Toolbar>
+                <ButtonCreateRoom onCreateRoom={onCreateRoom} />
+            </Toolbar>
             <List>
                 {rooms.map((room) => (
-                    <ListItem key={room.id} onClick={()=>{
+                    <ListItem key={room.id} onClick={() => {
                         navigate(`/rooms/${room.id}`);
                     }}>{room.title}</ListItem>
                 ))}
-
             </List>
         </Box>)
 };
