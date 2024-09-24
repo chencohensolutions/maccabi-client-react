@@ -1,11 +1,10 @@
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
+import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import { Header } from "../../components/Header"
 import { useEffect, useState } from "react";
 import api, { IUser } from "../../services/api";
 
 import PersonIcon from '@mui/icons-material/Person';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 interface PropsDialogCreateUser {
     open: boolean;
@@ -117,9 +116,6 @@ export const PageUsers = () => {
                     {users.map(({ id, userName }: IUser) => <ListItem key={id}
                         secondaryAction={
                             <>
-                                <IconButton edge="end" aria-label="rename">
-                                    <DriveFileRenameOutlineIcon />
-                                </IconButton>
                                 <IconButton edge="end" aria-label="delete" onClick={
                                     () => {
                                         setDialogDeleteUserId(id);
